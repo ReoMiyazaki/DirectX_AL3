@@ -8,8 +8,7 @@ GameScene::GameScene() {}
 
 GameScene::~GameScene() {
 	delete model_;
-	//delete debugCamera_;
-	delete player_;
+	delete debugCamera_;
 }
 
 void GameScene::Initialize() {
@@ -24,29 +23,25 @@ void GameScene::Initialize() {
 	// 3Dモデルの生成
 	model_ = Model::Create();
 
+	// ワールドトランスフォームの初期化 
+	worldTransform_.Initialize();
 	// ビュープロジェクションの初期化
 	viewProjection_.Initialize();
 
 	// デバッグカメラの生成
-	//debugCamera_ = new DebugCamera(1280, 960);
+	debugCamera_ = new DebugCamera(1280, 960);
 
-	//// 軸方向の表示を有効にする
-	//AxisIndicator::GetInstance()->SetVisible(true);
-	//// 軸方向表示が参照するビュープロジェクションを初期化する
-	//AxisIndicator::GetInstance()->SetTargetViewProjection(&debugCamera_->GetViewProjection());
+	// 軸方向の表示を有効にする
+	AxisIndicator::GetInstance()->SetVisible(true);
+	// 軸方向表示が参照するビュープロジェクションを指定する(アドレス渡し)
+	AxisIndicator::GetInstance()->SetTargetViewProjection(&debugCamera_->GetViewProjection());
 	// ライン描画が参照するビュープロジェクションを指定する(アドレス渡し)
-	//PrimitiveDrawer::GetInstance()->SetViewProjection(&debugCamera_->GetViewProjection());
-
-	// 自キャラの生成
-	player_ = new Player();
-	// 自キャラの初期化
-	player_->Initialize(model_, textureHandle_);
+	PrimitiveDrawer::GetInstance()->SetViewProjection(&debugCamera_->GetViewProjection());
 
 }
 
 void GameScene::Update() { 
-	//debugCamera_->Update();
-	player_->Update();
+	debugCamera_->Update();
 }
 
 void GameScene::Draw() {
@@ -76,9 +71,10 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 	
-	player_->Draw(viewProjection_);
+	model_->Draw(worldTransform_, debugCamera_->GetViewProjection(), textureHandle_);
 
-	
+	// ライン描画が参照するビュープロジェクションを指定する(アドレス渡し)
+	//PrimitiveDrawer::GetInstance()->DrawLine3d()
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

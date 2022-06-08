@@ -11,7 +11,6 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 
-#include "Player.h"
 #include "math.h"
 
 /// <summary>
@@ -56,13 +55,13 @@ class GameScene {
 	// 3Dモデル
 	Model* model_ = nullptr;
 
+	// ワールドトランスフォーム
+	WorldTransform worldTransform_;
 	// ビュープロジェクション
 	ViewProjection viewProjection_;
-
-	Player* player_;
 	
 	// デバックカメラ
-	// DebugCamera* debugCamera_ = nullptr;
+	DebugCamera* debugCamera_ = nullptr;
 
 	const float PI = 3.1415f;
 
